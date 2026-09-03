@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { THEMES } from "../lib/theme";
-import { useThemeContext } from "../hooks/useThemeContext";
+import { LOCALES } from "../lib/i18n";
 import { useLocaleContext } from "../hooks/useLocaleContext";
-import { IconCheck, IconClose, IconPalette } from "./icons/Icons";
+import { IconCheck, IconClose, IconLanguage } from "./icons/Icons";
 
-export function ThemeSwitcher() {
-  const { theme, setTheme } = useThemeContext();
-  const { t } = useLocaleContext();
+export function LanguageSwitcher() {
+  const { locale, setLocale, t } = useLocaleContext();
   const [open, setOpen] = useState(false);
 
   return (
@@ -14,10 +12,10 @@ export function ThemeSwitcher() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label={t.themeSwitcher.triggerLabel}
+        aria-label={t.language.triggerLabel}
         className="-m-1.5 p-1.5 text-parchment-dim transition hover:text-gold"
       >
-        <IconPalette size={20} />
+        <IconLanguage size={20} />
       </button>
 
       {open && (
@@ -25,7 +23,7 @@ export function ThemeSwitcher() {
           className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 sm:items-center"
           role="dialog"
           aria-modal="true"
-          aria-label={t.themeSwitcher.dialogTitle}
+          aria-label={t.language.dialogTitle}
           onClick={() => setOpen(false)}
         >
           <div
@@ -34,7 +32,7 @@ export function ThemeSwitcher() {
           >
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-display text-lg text-parchment">
-                {t.themeSwitcher.dialogTitle}
+                {t.language.dialogTitle}
               </h2>
               <button
                 type="button"
@@ -47,15 +45,14 @@ export function ThemeSwitcher() {
             </div>
 
             <div className="flex flex-col gap-2">
-              {THEMES.map((themeInfo) => {
-                const active = themeInfo.id === theme;
-                const label = t.theme[themeInfo.id];
+              {LOCALES.map((l) => {
+                const active = l === locale;
                 return (
                   <button
-                    key={themeInfo.id}
+                    key={l}
                     type="button"
                     onClick={() => {
-                      setTheme(themeInfo.id);
+                      setLocale(l);
                       setOpen(false);
                     }}
                     aria-pressed={active}
@@ -66,22 +63,8 @@ export function ThemeSwitcher() {
                         : "border-ink-border hover:border-ink-500",
                     ].join(" ")}
                   >
-                    <span className="flex h-8 w-8 shrink-0 overflow-hidden rounded-full border border-ink-border/70">
-                      {themeInfo.swatch.map((c, i) => (
-                        <span
-                          key={i}
-                          className="h-full flex-1"
-                          style={{ background: c }}
-                        />
-                      ))}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-medium text-parchment">
-                        {label.name}
-                      </span>
-                      <span className="block truncate text-xs text-parchment-dim">
-                        {label.tagline}
-                      </span>
+                    <span className="min-w-0 flex-1 text-sm font-medium text-parchment">
+                      {t.language.names[l]}
                     </span>
                     {active && (
                       <IconCheck size={18} className="shrink-0 text-gold" />
